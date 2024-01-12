@@ -21,15 +21,21 @@ jobs:
         exclude: 
            - nodejs_version: 18
              operating_system: macos-latest
-    runs-on: ${{matrix.operating_system}}
+    runs-on: ${{ matrix.operating_system }}
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Setup NodeJS Version - ${{matrix.nodejs_version}}
+    - name: Setup NodeJS Version - ${{ matrix.nodejs_version }}
       uses: actions/setup-node@v3
       with:
-        node-version: ${{matrix.nodejs_version}}
+        node-version: ${{ matrix.nodejs_version }}
+
+    - name: Cache NPM dependencies
+      uses: actions/cache@v3
+      with:
+        path: node_module
+        key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
     - name: Install Dependencies
       run: npm install
@@ -56,6 +62,12 @@ jobs:
         with:
           node-version: 18
 
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_module
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+            
       - name: Install Dependencies
         run: npm install
 
