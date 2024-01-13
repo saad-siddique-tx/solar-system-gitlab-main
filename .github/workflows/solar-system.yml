@@ -100,17 +100,17 @@ jobs:
         with:
           context: .
           push: false
-          tags: acd/solar-system:${{ github.sha }}
+          tags: solar-system
 
       - name: Docker Image Testing
         run: |
           docker images
           docker run --name solar-system-app -d \
               -p 3000:3000 \
-              -e MONGO_URI= $MONGO_URI \
+              -e MONGO_URI=$MONGO_URI \
               -e MONGO_USERNAME=$MONGO_USERNAME \
               -e MONGO_PASSWORD=$MONGO_PASSWORD \
-              acd/solar-system:${{ github.sha }}
+              solar-system
 
           export IP=$(docker inspect -f '{{ range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-app)
           echo $IP
